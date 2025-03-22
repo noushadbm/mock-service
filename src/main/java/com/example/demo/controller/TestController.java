@@ -102,13 +102,16 @@ public class TestController {
         if(jsFile.exists()) {
             String jsContent = Files.readString(jsFile.toPath());
 
+            String finalResult = "none";
             try (Context context = Context.create()) {
                 context.getBindings("js").putMember("name", "World");
-                Value result = context.eval("js", "var greeting = 'Hello, ' + name; greeting;");
+                //Value result = context.eval("js", "var greeting = 'Hello, ' + name; greeting;");
+                Value result = context.eval("js", jsContent);
                 System.out.println(result.asString());
+                finalResult = result.asString();
             }
 
-            return new ResponseEntity<>(jsContent, HttpStatusCode.valueOf(200));
+            return new ResponseEntity<>(finalResult, HttpStatusCode.valueOf(200));
         } else {
             String jsonContent = Files.readString(responseFile.toPath());
             HttpHeaders headers = new HttpHeaders();
